@@ -265,24 +265,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // 모드 전환 함수
     function setMode(mode) {
         isDrawingMode = (mode === 'draw');
+        // *** 수정된 부분: 항상 모든 드래그/드로잉 상태를 초기화합니다. ***
+        isDrawing = false;
+        isDraggingImage = false;
+
         if (isDrawingMode) {
-            drawingContainer.classList.add('drawing-mode'); // 캔버스 커서 변경용
+            drawingContainer.classList.add('drawing-mode'); // 캔버스 커서 변경용 (crosshair)
             drawModeButton.classList.add('active');
             moveZoomModeButton.classList.remove('active');
             if (ctx) { // 그리기 모드일 때 캔버스 상호작용 활성화
                 canvas.style.pointerEvents = 'auto';
-                // *** 수정된 부분: 그리기 모드로 전환 시 항상 선 두께 및 스타일을 재설정 ***
                 ctx.lineWidth = isErasing ? 20 : 5; // 지우개 상태에 따라 두께 설정
                 ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개 상태에 따라 색상 설정
                 ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
             }
+            drawingContainer.style.cursor = 'crosshair'; // 명시적으로 커서 설정
         } else { // 이동/확대 모드
-            drawingContainer.classList.remove('drawing-mode');
+            drawingContainer.classList.remove('drawing-mode'); // crosshair 제거
             drawModeButton.classList.remove('active');
             moveZoomModeButton.classList.add('active');
-            if (ctx) { // 이동/확대 모드일 때 캔버스 상호작용 비활성화 (이미지 이동에만 집중)
+            if (ctx) {
                 canvas.style.pointerEvents = 'none';
             }
+            drawingContainer.style.cursor = 'grab'; // 명시적으로 커서 설정
         }
     }
 
@@ -352,14 +357,12 @@ document.addEventListener('DOMContentLoaded', () => {
         colorPicker.addEventListener('input', (e) => {
             currentColor = e.target.value;
             isErasing = false;
-            // setMode('draw') 내에서 lineWidth, strokeStyle, globalCompositeOperation이 설정되므로 여기서는 삭제
             setMode('draw'); // 색상 선택 시 자동으로 그리기 모드
         });
 
         // 지우개 기능
         eraserButton.addEventListener('click', () => {
             isErasing = true;
-            // setMode('draw') 내에서 lineWidth, strokeStyle, globalCompositeOperation이 설정되므로 여기서는 삭제
             setMode('draw'); // 지우개도 그리기 모드의 일종으로 간주
         });
 
