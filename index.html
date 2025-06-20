@@ -9,7 +9,7 @@
 <body>
     <div id="landing-page" class="page active">
         <div class="landing-content">
-            <h1 class="main-title">6.25전쟁, 우리 곁에 누가 있었을까?</h1>
+            <h1 class="main-title">6.25 전쟁,<br>우리 곁에 누가 있었을까?</h1>
             <button id="start-button" class="main-button">수업 시작하기</button>
         </div>
     </div>
@@ -50,20 +50,23 @@
     </div>
 
     <div id="activity2-page" class="page hidden activity2-container">
-        <div class="activity2-left">
+        <div class="activity2-full-width-title">
             <h2 class="activity-title">UN 참전국 이름 쓰기</h2>
-            <img src="act1.png" alt="UN 참전국 지도" class="responsive-image act1-image">
         </div>
-        <div class="activity2-right">
-            <h2 class="activity-title quiz-title">UN 참전국 이름 쓰기 - 퀴즈</h2>
-            <div class="quiz-container">
-                <div class="flags-container">
-                    </div>
-                <div class="names-container">
-                    </div>
+        <div class="activity2-content-wrapper">
+            <div class="activity2-left">
+                <img src="act1.png" alt="UN 참전국 지도" class="responsive-image act1-image">
             </div>
-            <button class="nav-button next-activity-button" id="quiz-next-button" data-target-page="activity3-page" disabled>🚀</button>
+            <div class="activity2-right">
+                <div class="quiz-container">
+                    <div class="flags-container">
+                        </div>
+                    <div class="names-container">
+                        </div>
+                </div>
+            </div>
         </div>
+        <button class="nav-button next-activity-button" id="quiz-next-button" data-target-page="activity3-page" disabled>🚀</button>
     </div>
 
     <div id="activity3-page" class="page hidden">
@@ -75,6 +78,8 @@
         <div class="drawing-controls">
             <input type="color" id="color-picker" value="#FF6F61">
             <button id="eraser-button">지우개</button>
+            <button id="draw-mode-button" class="active">그리기 모드</button>
+            <button id="move-zoom-mode-button">이동/확대 모드</button>
         </div>
         <button class="nav-button next-activity-button" data-target-page="activity4-page">🚀</button>
     </div>
@@ -83,8 +88,7 @@
         <h2 class="activity-title">전쟁 속 사람들, 사진으로 만나요!</h2>
         <div class="activity4-content-wrapper">
             <div class="activity4-left">
-                <div class="slider-container vertical-slider">
-                    <div class="slider-images">
+                <div class="slider-container horizontal-slider"> <div class="slider-images">
                         <img src="job1.gif" alt="직업 1" class="slider-image active">
                         <img src="job2.gif" alt="직업 2" class="slider-image">
                         <img src="job3.gif" alt="직업 3" class="slider-image">
