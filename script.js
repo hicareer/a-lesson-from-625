@@ -8,21 +8,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (page.id === pageId) {
                 page.classList.add('active');
                 page.classList.remove('hidden');
-                // 활성화된 페이지의 z-index를 높여 클릭 가능하게 합니다.
                 page.style.zIndex = '10';
             } else {
                 page.classList.remove('active');
                 page.classList.add('hidden');
-                page.style.zIndex = '1'; // 비활성화된 페이지는 낮은 z-index
+                page.style.zIndex = '1';
             }
         });
         currentPageId = pageId;
     }
 
     // 초기 페이지 설정
-    showPage('landing-page'); // 맨 처음 페이지 로드 시 'landing-page' 활성화
+    showPage('landing-page');
 
-    // 첫 페이지: 수업 시작하기 버튼
+    // 1. 첫 페이지: 수업 시작하기 버튼
     const startButton = document.getElementById('start-button');
     if (startButton) {
         startButton.addEventListener('click', () => {
@@ -41,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 다음 활동으로 넘어가는 공통 버튼 (🚀 아이콘)
-    // 퀴즈 다음 버튼과 폭죽 버튼은 별도로 처리되므로 제외합니다.
     document.querySelectorAll('.nav-button:not(#quiz-next-button):not(#finish-button)').forEach(button => {
         button.addEventListener('click', (event) => {
             const targetPageId = button.dataset.targetPage;
@@ -51,9 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // --- 1번 활동: 이미지 슬라이더 ---
-    // #activity4-page의 슬라이더는 vertical-slider 클래스를 가지므로 제외하여 겹치지 않게 합니다.
-    const sliderContainers = document.querySelectorAll('.slider-container:not(.vertical-slider)');
+    // --- 1번 활동: 이미지 슬라이더 (첫 번째 슬라이더) ---
+    const sliderContainers = document.querySelectorAll('#activity1-page .slider-container');
 
     sliderContainers.forEach(container => {
         const images = container.querySelectorAll('.slider-image');
@@ -82,7 +79,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // 초기 이미지 표시
         showImage(currentIndex);
     });
 
@@ -99,32 +95,33 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCountries = countries.length;
 
     function initializeQuiz() {
-        // 국기 섞어서 배치
-        const shuffledCountries = [...countries].sort(() => Math.random() - 0.5);
         flagsContainer.innerHTML = '';
-        shuffledCountries.forEach(country => {
+        namesContainer.innerHTML = '';
+        correctMatches = 0;
+
+        // 국기 섞어서 배치
+        const shuffledFlags = [...countries].sort(() => Math.random() - 0.5);
+        shuffledFlags.forEach(country => {
             const img = document.createElement('img');
             img.src = `${country}.gif`;
             img.alt = country;
             img.classList.add('flag-item');
             img.draggable = true;
-            img.dataset.country = country; // 데이터 속성으로 국가명 저장
+            img.dataset.country = country;
             flagsContainer.appendChild(img);
         });
 
         // 국가명 텍스트 박스 섞어서 배치
         const shuffledNames = [...countries].sort(() => Math.random() - 0.5);
-        namesContainer.innerHTML = '';
         shuffledNames.forEach(country => {
             const div = document.createElement('div');
             div.classList.add('name-box');
-            div.dataset.country = country; // 데이터 속성으로 국가명 저장
+            div.dataset.country = country;
             div.innerHTML = `<span class="name-text">${country}</span>`;
             namesContainer.appendChild(div);
         });
 
         addDragAndDropListeners();
-        correctMatches = 0;
         updateQuizNextButton();
     }
 
@@ -147,45 +144,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('#activity2-page .name-box').forEach(box => {
             box.addEventListener('dragover', (e) => {
-                e.preventDefault(); // 드롭을 허용하기 위해 기본 동작 방지
+                e.preventDefault();
                 if (!box.classList.contains('correct') && !box.classList.contains('occupied')) {
-                    box.style.backgroundColor = 'rgba(255, 255, 255, 0.4)'; // 드래그 오버 시 색상 변경
+                    box.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
                 }
             });
 
             box.addEventListener('dragleave', (e) => {
                 if (!box.classList.contains('correct') && !box.classList.contains('occupied')) {
-                    box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'; // 원래 색상으로 복원
+                    box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
                 }
             });
 
             box.addEventListener('drop', (e) => {
                 e.preventDefault();
-                box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)'; // 드롭 후 원래 색상으로 복원
+                box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
 
                 if (draggedItem && !box.classList.contains('correct') && !box.classList.contains('occupied')) {
                     const flagCountry = draggedItem.dataset.country;
                     const boxCountry = box.dataset.country;
 
                     if (flagCountry === boxCountry) {
-                        // 정답일 경우
                         box.classList.add('correct');
-                        box.classList.remove('occupied'); // 혹시 모를 경우를 대비
-                        box.innerHTML = ''; // 기존 텍스트 제거
-                        box.appendChild(draggedItem); // 국기 이미지를 박스 안으로 이동
-                        draggedItem.draggable = false; // 정답 처리된 국기는 더 이상 드래그 불가
-                        draggedItem.style.position = 'static'; // 박스 안에서 위치 고정
-                        draggedItem.style.width = '100%'; // 박스에 맞게 크기 조절
+                        box.classList.remove('occupied');
+                        box.innerHTML = '';
+                        box.appendChild(draggedItem);
+                        draggedItem.draggable = false;
+                        draggedItem.style.position = 'static';
+                        draggedItem.style.width = '100%';
                         draggedItem.style.height = '100%';
                         draggedItem.style.objectFit = 'contain';
                         correctMatches++;
                         updateQuizNextButton();
                     } else {
-                        // 오답일 경우: 원래 위치로 돌아가도록 (JS로는 직접적인 '원래 위치' 복원이 어려움)
-                        box.classList.add('occupied'); // 잠시 빨간색으로 표시
+                        box.classList.add('occupied');
+                        box.style.backgroundColor = 'rgba(255, 0, 0, 0.4)'; // 오답 시 빨간색
                         setTimeout(() => {
                             box.classList.remove('occupied');
-                        }, 500); // 0.5초 후 원래대로
+                            box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                        }, 500);
+                        // 오답 시 국기 원위치로 (flagsContainer에 다시 추가)
+                        flagsContainer.appendChild(draggedItem);
+                        draggedItem.style.width = ''; // 인라인 스타일 초기화
+                        draggedItem.style.height = '';
+                        draggedItem.style.objectFit = '';
                     }
                 }
             });
@@ -195,16 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateQuizNextButton() {
         if (correctMatches === totalCountries) {
             quizNextButton.disabled = false;
-            quizNextButton.style.backgroundColor = '#8B4513'; // 활성화 색상
+            quizNextButton.style.backgroundColor = '#8B4513';
             quizNextButton.style.cursor = 'pointer';
         } else {
             quizNextButton.disabled = true;
-            quizNextButton.style.backgroundColor = '#555'; // 비활성화 색상
+            quizNextButton.style.backgroundColor = '#555';
             quizNextButton.style.cursor = 'not-allowed';
         }
     }
 
-    // 퀴즈 페이지가 활성화될 때마다 초기화
     const observerQuizPage = new MutationObserver((mutationsList) => {
         for (let mutation of mutationsList) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -216,15 +217,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     observerQuizPage.observe(document.getElementById('activity2-page'), { attributes: true });
 
-    // --- 3번 활동: 지도 칠하기 (캔버스 드로잉) ---
+    // --- 3번 활동: 지도 칠하기 (캔버스 드로잉 & 이미지 이동/확대) ---
     const canvas = document.getElementById('drawing-canvas');
     const drawingContainer = document.querySelector('#activity3-page .drawing-container');
     const colorPicker = document.getElementById('color-picker');
     const eraserButton = document.getElementById('eraser-button');
+    const drawModeButton = document.getElementById('draw-mode-button');
+    const moveZoomModeButton = document.getElementById('move-zoom-mode-button');
+    const drawingBackground = document.querySelector('#activity3-page .drawing-background');
     const ctx = canvas ? canvas.getContext('2d') : null;
+
     let isDrawing = false;
-    let currentColor = colorPicker ? colorPicker.value : '#FF6F61'; // 초기 색상 붉은 기 있는 코랄색
+    let currentColor = colorPicker ? colorPicker.value : '#FF6F61';
     let isErasing = false;
+    let isDrawingMode = true; // 그리기 모드가 기본
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let startX = 0;
+    let startY = 0;
+    let isDraggingImage = false;
 
     // 캔버스 크기 조정 함수
     function resizeCanvas() {
@@ -232,17 +244,48 @@ document.addEventListener('DOMContentLoaded', () => {
             const containerRect = drawingContainer.getBoundingClientRect();
             canvas.width = containerRect.width;
             canvas.height = containerRect.height;
-            // 캔버스 크기 조정 후 기존 그리기 설정 복원
-            ctx.lineWidth = isErasing ? 20 : 5; // 지우개 크기 펜보다 크게
-            ctx.lineCap = 'round'; // 선 끝 모양
-            ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개는 캔버스 배경색과 동일하게
-            ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over'; // 지우개 모드
+
+            // 캔버스 초기화 후 기존 그리기 설정 복원
+            if (ctx) {
+                ctx.lineWidth = isErasing ? 20 : 5;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = isErasing ? '#222' : currentColor;
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+            }
         }
     }
 
-    // 페이지 로드 시 및 컨테이너 크기 변경 시 캔버스 크기 조정
+    // 이미지 변환 적용 함수
+    function applyTransform() {
+        drawingBackground.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`; // 캔버스도 동일하게 이동/확대
+        canvas.style.transformOrigin = `0 0`; // 캔버스도 좌상단 기준
+    }
+
+    // 모드 전환 함수
+    function setMode(mode) {
+        isDrawingMode = (mode === 'draw');
+        if (isDrawingMode) {
+            drawingContainer.classList.add('drawing-mode'); // 캔버스 커서 변경용
+            drawModeButton.classList.add('active');
+            moveZoomModeButton.classList.remove('active');
+            if (ctx) { // 그리기 모드일 때 캔버스 상호작용 활성화
+                canvas.style.pointerEvents = 'auto';
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+                ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개는 캔버스 배경색과 동일하게
+            }
+        } else { // 이동/확대 모드
+            drawingContainer.classList.remove('drawing-mode');
+            drawModeButton.classList.remove('active');
+            moveZoomModeButton.classList.add('active');
+            if (ctx) { // 이동/확대 모드일 때 캔버스 상호작용 비활성화 (이미지 이동에만 집중)
+                canvas.style.pointerEvents = 'none';
+            }
+        }
+    }
+
     window.addEventListener('resize', resizeCanvas);
-    // 3번 활동 페이지가 활성화될 때 캔버스 크기 조정 및 초기화
+
     const observerDrawingPage = new MutationObserver((mutationsList) => {
         for (let mutation of mutationsList) {
             if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
@@ -257,6 +300,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         ctx.strokeStyle = currentColor;
                         ctx.globalCompositeOperation = 'source-over';
                     }
+                    scale = 1;
+                    translateX = 0;
+                    translateY = 0;
+                    applyTransform(); // 이미지 위치/크기 초기화
+                    setMode('draw'); // 초기 모드 그리기
                 }
             }
         }
@@ -264,96 +312,130 @@ document.addEventListener('DOMContentLoaded', () => {
     observerDrawingPage.observe(document.getElementById('activity3-page'), { attributes: true });
 
 
-    if (canvas) {
+    if (canvas && ctx && drawingContainer && colorPicker && eraserButton && drawModeButton && moveZoomModeButton) {
+        // 그리기 모드 이벤트
         canvas.addEventListener('mousedown', (e) => {
+            if (!isDrawingMode) return;
             isDrawing = true;
             ctx.beginPath();
             const rect = canvas.getBoundingClientRect();
-            // 마우스 위치를 캔버스 내의 상대 좌표로 변환
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+            // 스케일 및 이동을 고려한 실제 캔버스 좌표 계산
+            const x = (e.clientX - rect.left) / scale - translateX / scale;
+            const y = (e.clientY - rect.top) / scale - translateY / scale;
+            ctx.moveTo(x, y);
         });
 
         canvas.addEventListener('mousemove', (e) => {
-            if (!isDrawing) return;
+            if (!isDrawing || !isDrawingMode) return;
             const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            const x = (e.clientX - rect.left) / scale - translateX / scale;
+            const y = (e.clientY - rect.top) / scale - translateY / scale;
+            ctx.lineTo(x, y);
             ctx.stroke();
         });
 
         canvas.addEventListener('mouseup', () => {
+            if (!isDrawingMode) return;
             isDrawing = false;
             ctx.closePath();
         });
 
         canvas.addEventListener('mouseout', () => {
+            if (!isDrawingMode) return;
             isDrawing = false;
             ctx.closePath();
         });
 
         // 색상 변경
-        if (colorPicker) {
-            colorPicker.addEventListener('input', (e) => {
-                currentColor = e.target.value;
-                isErasing = false; // 색상 선택 시 지우개 모드 해제
-                ctx.lineWidth = 5; // 펜 두께로 변경
-                ctx.strokeStyle = currentColor;
-                ctx.globalCompositeOperation = 'source-over'; // 일반 그리기 모드
-            });
-        }
+        colorPicker.addEventListener('input', (e) => {
+            currentColor = e.target.value;
+            isErasing = false;
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = currentColor;
+            ctx.globalCompositeOperation = 'source-over';
+            setMode('draw'); // 색상 선택 시 자동으로 그리기 모드
+        });
 
         // 지우개 기능
-        if (eraserButton) {
-            eraserButton.addEventListener('click', () => {
-                isErasing = true;
-                ctx.lineWidth = 20; // 지우개 굵기
-                ctx.strokeStyle = '#222'; // 캔버스 배경색과 동일하게 (지우는 효과)
-                ctx.globalCompositeOperation = 'destination-out'; // 이 모드가 지우개처럼 작동합니다.
-            });
-        }
+        eraserButton.addEventListener('click', () => {
+            isErasing = true;
+            ctx.lineWidth = 20;
+            ctx.strokeStyle = '#222'; // 캔버스 배경색과 동일하게
+            ctx.globalCompositeOperation = 'destination-out';
+            setMode('draw'); // 지우개도 그리기 모드의 일종으로 간주
+        });
 
-        // --- 확대/축소 기능 (선택사항) ---
-        // 지도의 확대/축소 기능은 캔버스 위에 그리는 것과 동시에 동작하기에 구현이 복잡합니다.
-        // 현재는 배경 이미지인 'act2.jpg'만 확대/축소되게 설정했습니다.
-        // 드로잉과 확대/축소를 함께 하려면 캔버스 좌표계 변환 및 재그리기 로직이 필요하여 복잡도가 높아집니다.
-        const drawingBackground = document.querySelector('#activity3-page .drawing-background');
-        let scale = 1;
-        const scaleStep = 0.1;
-        const maxScale = 3;
-        const minScale = 0.5;
+        // 모드 전환 버튼
+        drawModeButton.addEventListener('click', () => setMode('draw'));
+        moveZoomModeButton.addEventListener('click', () => setMode('move_zoom'));
 
-        // 마우스 휠 이벤트로 확대/축소
+
+        // 이동/확대 모드 이벤트
+        drawingContainer.addEventListener('mousedown', (e) => {
+            if (isDrawingMode) return; // 그리기 모드에서는 작동 안 함
+            isDraggingImage = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            drawingContainer.style.cursor = 'grabbing';
+        });
+
+        drawingContainer.addEventListener('mousemove', (e) => {
+            if (!isDraggingImage || isDrawingMode) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        });
+
+        drawingContainer.addEventListener('mouseup', () => {
+            if (isDrawingMode) return;
+            isDraggingImage = false;
+            drawingContainer.style.cursor = 'grab';
+        });
+
+        drawingContainer.addEventListener('mouseout', () => {
+            if (isDrawingMode) return;
+            isDraggingImage = false;
+            drawingContainer.style.cursor = 'grab';
+        });
+
         drawingContainer.addEventListener('wheel', (e) => {
-            e.preventDefault(); // 기본 스크롤 방지
+            e.preventDefault();
+            if (isDrawingMode) return; // 그리기 모드에서는 확대/축소 작동 안 함
+
+            const scaleAmount = 0.1;
+            const mouseX = e.clientX - drawingContainer.getBoundingClientRect().left;
+            const mouseY = e.clientY - drawingContainer.getBoundingClientRect().top;
+
             const oldScale = scale;
 
             if (e.deltaY < 0) { // 휠 위로 (확대)
-                scale = Math.min(maxScale, scale + scaleStep);
+                scale += scaleAmount;
             } else { // 휠 아래로 (축소)
-                scale = Math.max(minScale, scale - scaleStep);
+                scale -= scaleAmount;
             }
 
-            // 확대/축소 중심점을 마우스 위치로 설정 (간단한 구현)
-            const rect = drawingContainer.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            const mouseY = e.clientY - rect.top;
+            // 스케일 제한
+            scale = Math.max(0.5, Math.min(3, scale));
 
-            // transform-origin을 설정하여 마우스 위치를 기준으로 확대/축소되게 합니다.
-            drawingBackground.style.transformOrigin = `${mouseX}px ${mouseY}px`;
-            drawingBackground.style.transform = `scale(${scale})`;
-            
-            // 캔버스 드로잉에 대한 확대/축소는 현재 버전에서는 적용되지 않습니다.
-            // (이미지만 확대/축소되고 캔버스에 그리는 내용은 고정된 크기로 유지됩니다)
+            // 확대/축소 시 이미지 중심 유지
+            translateX -= (mouseX / oldScale) * (scale - oldScale);
+            translateY -= (mouseY / oldScale) * (scale - oldScale);
+
+            applyTransform();
         });
+
+        setMode('draw'); // 초기 모드 설정
     }
 
-    // --- 4번 활동: 사진 슬라이드 및 필기창 ---
-    // job 이미지 슬라이더 (4번 활동 전용)
-    const verticalSliderContainer = document.querySelector('#activity4-page .vertical-slider');
 
-    if (verticalSliderContainer) {
-        const images = verticalSliderContainer.querySelectorAll('.slider-image');
-        const prevButton = verticalSliderContainer.querySelector('.slider-prev');
-        const nextButton = verticalSliderContainer.querySelector('.slider-next');
+    // --- 4번 활동: 사진 슬라이드 및 필기창 ---
+    // horizontal-slider 클래스를 가진 슬라이더 (4번 활동 전용)
+    const horizontalSliderContainer = document.querySelector('#activity4-page .horizontal-slider');
+
+    if (horizontalSliderContainer) {
+        const images = horizontalSliderContainer.querySelectorAll('.slider-image');
+        const prevButton = horizontalSliderContainer.querySelector('.slider-prev');
+        const nextButton = horizontalSliderContainer.querySelector('.slider-next');
         let currentIndex = 0;
 
         function showImage(index) {
@@ -366,7 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (prevButton && nextButton) {
-            // 수직 슬라이더이므로 prev/next 버튼 위치 조정 (CSS에서 이미 처리)
             prevButton.addEventListener('click', () => {
                 currentIndex = (currentIndex - 1 + images.length) % images.length;
                 showImage(currentIndex);
@@ -381,31 +462,27 @@ document.addEventListener('DOMContentLoaded', () => {
         showImage(currentIndex);
     }
 
-    // --- 4번 활동: 폭죽 효과 ---
+    // --- 5번 활동: 폭죽 효과 ---
     const finishButton = document.getElementById('finish-button');
     const fireworksContainer = document.getElementById('fireworks-container');
 
     if (finishButton && fireworksContainer) {
         finishButton.addEventListener('click', (e) => {
-            // 버튼 중앙에서 폭죽이 터지도록
-            const rect = finishButton.getBoundingClientRect();
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
-            createFireworks(centerX, centerY);
+            createFireworksAtRandomLocations(10); // 여러 위치에서 10번 폭죽 터뜨리기
         });
     }
 
     function createFireworks(x, y) {
         const colors = ['#FF0', '#F00', '#0F0', '#00F', '#F0F', '#0FF'];
-        const numParticles = 40; // 폭죽 파티클 수 증가
+        const numParticles = 50;
 
         for (let i = 0; i < numParticles; i++) {
             const firework = document.createElement('div');
             firework.classList.add('firework');
-            fireworksContainer.appendChild(firework); // fireworks-container에 추가하여 body에 직접 추가하는 것을 방지
+            fireworksContainer.appendChild(firework);
 
             const angle = Math.random() * Math.PI * 2;
-            const distance = Math.random() * 150 + 80; // 거리 증가
+            const distance = Math.random() * 200 + 100; // 거리 더 증가
 
             const targetX = x + Math.cos(angle) * distance;
             const targetY = y + Math.sin(angle) * distance;
@@ -415,15 +492,27 @@ document.addEventListener('DOMContentLoaded', () => {
             firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
             firework.animate([
-                { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 }, // 시작점 중앙 정렬
-                { transform: `translate(${targetX - x}px, ${targetY - y}px) scale(1.5)`, opacity: 0 } // 목표 지점 이동 및 스케일 아웃
+                { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
+                { transform: `translate(${targetX - x}px, ${targetY - y}px) scale(1.5)`, opacity: 0 }
             ], {
-                duration: Math.random() * 1000 + 800, // 0.8초에서 1.8초
+                duration: Math.random() * 1000 + 1000, // 1초에서 2초
                 easing: 'ease-out',
-                fill: 'forwards' // 애니메이션 끝난 후 최종 상태 유지
+                fill: 'forwards'
             }).onfinish = () => {
-                firework.remove(); // 애니메이션 끝난 후 요소 제거
+                firework.remove();
             };
+        }
+    }
+
+    function createFireworksAtRandomLocations(count) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        for (let i = 0; i < count; i++) {
+            // 화면 전체 범위에서 랜덤 위치
+            const randomX = Math.random() * vw;
+            const randomY = Math.random() * vh;
+            createFireworks(randomX, randomY);
         }
     }
 });
