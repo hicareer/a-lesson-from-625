@@ -271,8 +271,10 @@ document.addEventListener('DOMContentLoaded', () => {
             moveZoomModeButton.classList.remove('active');
             if (ctx) { // 그리기 모드일 때 캔버스 상호작용 활성화
                 canvas.style.pointerEvents = 'auto';
+                // *** 수정된 부분: 그리기 모드로 전환 시 항상 선 두께 및 스타일을 재설정 ***
+                ctx.lineWidth = isErasing ? 20 : 5; // 지우개 상태에 따라 두께 설정
+                ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개 상태에 따라 색상 설정
                 ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
-                ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개는 캔버스 배경색과 동일하게
             }
         } else { // 이동/확대 모드
             drawingContainer.classList.remove('drawing-mode');
@@ -350,18 +352,14 @@ document.addEventListener('DOMContentLoaded', () => {
         colorPicker.addEventListener('input', (e) => {
             currentColor = e.target.value;
             isErasing = false;
-            ctx.lineWidth = 5;
-            ctx.strokeStyle = currentColor;
-            ctx.globalCompositeOperation = 'source-over';
+            // setMode('draw') 내에서 lineWidth, strokeStyle, globalCompositeOperation이 설정되므로 여기서는 삭제
             setMode('draw'); // 색상 선택 시 자동으로 그리기 모드
         });
 
         // 지우개 기능
         eraserButton.addEventListener('click', () => {
             isErasing = true;
-            ctx.lineWidth = 20;
-            ctx.strokeStyle = '#222'; // 캔버스 배경색과 동일하게
-            ctx.globalCompositeOperation = 'destination-out';
+            // setMode('draw') 내에서 lineWidth, strokeStyle, globalCompositeOperation이 설정되므로 여기서는 삭제
             setMode('draw'); // 지우개도 그리기 모드의 일종으로 간주
         });
 
