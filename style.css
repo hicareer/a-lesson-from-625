@@ -54,17 +54,22 @@ body::before {
 .page.active {
     opacity: 1;
     visibility: visible;
+    /* 버튼 클릭 문제를 해결하기 위해 z-index 추가 */
+    z-index: 1; 
 }
 
 /* 첫 번째 페이지 스타일 */
 #landing-page .landing-content {
-    background-color: rgba(255, 255, 255, 0.8); /* 투명한 흰색 배경 */
-    padding: 50px;
+    background-color: rgba(255, 255, 255, 0.2); /* 투명도 0.2로 조정 (더 투명하게) */
+    padding: 80px; /* 네모 박스 크기 키우기 */
+    width: 70%; /* 너비 증가 */
+    max-width: 900px; /* 최대 너비 설정 */
     border-radius: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box; /* padding이 너비에 포함되도록 */
 }
 
 .main-title {
@@ -159,7 +164,7 @@ body::before {
     border: 5px solid #FFD700;
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    background-color: rgba(0, 0, 0, 0.8); /* 배경 투명도 감소 */
+    background-color: rgba(0, 0, 0, 0.9); /* 배경 투명도 0.9로 조정 (더 불투명하게) */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -214,28 +219,60 @@ body::before {
     right: 10px;
 }
 
+/* 다음 활동으로 넘어가는 공통 버튼 */
+.nav-button {
+    background-color: #8B4513;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 30px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.nav-button:hover {
+    background-color: #A0522D;
+}
+
+.nav-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 /* 2번 활동 페이지 스타일 */
 #activity2-page {
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    gap: 30px; /* 좌우 컨텐츠 간격 추가 */
+    max-width: 1400px; /* 전체 너비 확장 */
+    width: 95vw; /* 뷰포트 너비에 가깝게 */
 }
 
 .activity2-left {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 1; /* 남은 공간을 균등하게 차지 */
+    min-width: 400px; /* 최소 너비 설정 */
 }
 
 .activity2-right {
     display: flex;
     flex-direction: column;
     align-items: center;
+    flex: 1; /* 남은 공간을 균등하게 차지 */
+    min-width: 400px; /* 최소 너비 설정 */
 }
 
 .act1-image {
-    max-width: 45vw; /* 왼쪽 이미지 최대 너비 */
-    max-height: 70vh;
+    max-width: 100%; /* 부모 요소에 꽉 차게 */
+    max-height: 70vh; /* 높이 제한 */
+    height: auto; /* 비율 유지 */
     border: 3px solid #FFD700;
     border-radius: 10px;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
@@ -246,13 +283,12 @@ body::before {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: 45vw; /* 오른쪽 퀴즈 컨테이너 최대 너비 */
-    max-width: 600px;
+    width: 100%; /* 부모 요소에 꽉 차게 */
     background-color: rgba(0, 0, 0, 0.6);
     border-radius: 15px;
     padding: 20px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    margin-top: 0; /* 퀴즈 제목과의 간격 조정 */
+    margin-top: 0;
 }
 
 #activity2-page .quiz-title {
@@ -327,7 +363,7 @@ body::before {
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    background-color: #222; /* 캔버스 배경색 */
+    background-color: #222;
 }
 
 #activity3-page .drawing-background {
@@ -392,15 +428,28 @@ body::before {
 
 /* 4번 활동 페이지 스타일 */
 #activity4-page {
-    flex-direction: row;
-    justify-content: space-around;
-    align-items: center;
+    flex-direction: column; /* 제목이 위에 오도록 전체 컨테이너를 column으로 설정 */
+    justify-content: flex-start; /* 상단 정렬 */
+    padding-top: 50px; /* 제목 상단 여백 */
+}
+
+#activity4-page .activity-content-wrapper { /* 사진과 텍스트 입력창을 묶는 새로운 래퍼 */
+    display: flex;
+    flex-direction: row; /* 사진과 텍스트를 가로로 배치 */
+    justify-content: center;
+    align-items: flex-start; /* 상단 정렬 */
+    width: 90%;
+    max-width: 1400px;
+    gap: 30px; /* 간격 */
+    flex-grow: 1; /* 남은 공간을 차지하도록 */
+    margin-top: 30px; /* 제목과 컨텐츠 사이 간격 */
 }
 
 .activity4-left {
-    width: 45vw;
+    flex: 1; /* 왼쪽 공간을 균등하게 차지 */
+    min-width: 450px; /* 최소 너비 */
     max-width: 600px;
-    height: 70vh;
+    height: 60vh; /* 높이 조정 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -412,7 +461,8 @@ body::before {
 }
 
 .activity4-left .slider-container {
-    flex-direction: column; /* 세로 슬라이더 */
+    /* 기존 세로 슬라이더 스타일 유지 */
+    flex-direction: column;
     width: 100%;
     height: 100%;
     border: none;
@@ -458,31 +508,33 @@ body::before {
 }
 
 .activity4-right {
-    width: 45vw;
+    flex: 1; /* 오른쪽 공간을 균등하게 차지 */
+    min-width: 450px; /* 최소 너비 */
     max-width: 600px;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* 상단 정렬 */
 }
 
 .note-textarea {
-    width: 90%;
-    height: 70vh;
+    width: 90%; /* 부모 요소에 꽉 차게 */
+    height: 60vh; /* 높이 조정 (왼쪽 슬라이더 높이와 맞추기) */
     padding: 20px;
     font-family: 'SejongGeulggot', sans-serif;
-    font-size: 1.5em; /* 글씨 크기 증가 */
+    font-size: 1.6em; /* 글씨 크기 더 증가 */
     border: 2px solid #FFD700;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.8);
     color: #333;
-    resize: none; /* 크기 조절 비활성화 */
+    resize: none;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .finish-button {
     font-size: 2em;
     padding: 15px 30px;
-    margin-top: 30px;
+    margin-top: 30px; /* 버튼 상단 여백 */
+    align-self: center; /* 전체 페이지 하단 중앙에 배치 */
 }
 
 /* 폭죽 컨테이너 */
@@ -492,8 +544,8 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    pointer-events: none; /* 폭죽 클릭 방지 */
-    z-index: 10000; /* 최상단 */
+    pointer-events: none;
+    z-index: 10000;
 }
 
 .firework {
@@ -518,6 +570,42 @@ body::before {
 }
 
 /* 미디어 쿼리 (작은 화면 대응) */
+@media (max-width: 1024px) {
+    .main-title {
+        font-size: 4em;
+    }
+    #landing-page .landing-content {
+        padding: 50px;
+        width: 80%;
+    }
+    .activity-title {
+        font-size: 2.5em;
+    }
+    #activity2-page {
+        flex-direction: column;
+        gap: 20px;
+        width: 95vw;
+    }
+    .activity2-left, .activity2-right {
+        width: 90%;
+        min-width: unset; /* 최소 너비 해제 */
+    }
+    #activity4-page .activity-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+    }
+    .activity4-left, .activity4-right {
+        width: 90%;
+        min-width: unset;
+        height: auto; /* 높이 고정 해제 */
+    }
+    .note-textarea {
+        height: 30vh; /* 모바일에서 높이 줄임 */
+        font-size: 1.2em;
+    }
+}
+
 @media (max-width: 768px) {
     .main-title {
         font-size: 3em;
@@ -544,14 +632,6 @@ body::before {
     #activity1-page .slider-container {
         height: 60vh;
     }
-    #activity2-page {
-        flex-direction: column;
-        align-items: center;
-    }
-    .activity2-left, .activity2-right {
-        width: 90%;
-        margin-bottom: 20px;
-    }
     .act1-image {
         max-width: 90%;
     }
@@ -561,16 +641,12 @@ body::before {
     #activity3-page .drawing-container {
         height: 60vh;
     }
-    #activity4-page {
-        flex-direction: column;
-        align-items: center;
-    }
-    .activity4-left, .activity4-right {
-        width: 90%;
-        margin-bottom: 20px;
-    }
     .note-textarea {
-        height: 50vh;
-        font-size: 1.2em;
+        height: 25vh; /* 모바일에서 높이 더 줄임 */
+        font-size: 1em;
+    }
+    .finish-button {
+        font-size: 1.5em;
+        padding: 10px 20px;
     }
 }
