@@ -427,3 +427,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 });
+
+// 지도 드래그 기능
+document.addEventListener('DOMContentLoaded', () => {
+  const draggableMap = document.getElementById('draggable-map');
+  let isDragging = false;
+  let startX, startY, translateX = 0, translateY = 0;
+
+  if (draggableMap) {
+    draggableMap.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+      draggableMap.classList.add('dragging');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dx = e.clientX - startX;
+      const dy = e.clientY - startY;
+      translateX += dx;
+      translateY += dy;
+      draggableMap.style.transform = `translate(${translateX}px, ${translateY}px)`;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        isDragging = false;
+        draggableMap.classList.remove('dragging');
+      }
+    });
+  }
+});
