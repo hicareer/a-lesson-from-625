@@ -9,7 +9,7 @@
 <body>
     <div id="landing-page" class="page active">
         <div class="landing-content">
-            <h1 class="main-title">6.25전쟁, 우리 곁에 누가 있었을까?</h1>
+            <h1 class="main-title">6.25 전쟁,<br>우리 곁에 누가 있었을까?</h1>
             <button id="start-button" class="main-button">수업 시작하기</button>
         </div>
     </div>
@@ -50,19 +50,20 @@
     </div>
 
     <div id="activity2-page" class="page hidden activity2-container">
-        <div class="activity2-left">
-            <h2 class="activity-title">UN 참전국 이름 쓰기</h2>
-            <img src="act1.png" alt="UN 참전국 지도" class="responsive-image act1-image">
-        </div>
-        <div class="activity2-right">
-            <h2 class="activity-title quiz-title">UN 참전국 이름 쓰기 - 퀴즈</h2>
-            <div class="quiz-container">
-                <div class="flags-container">
-                    </div>
-                <div class="names-container">
-                    </div>
+        <h2 class="activity-title top-title">UN 참전국 이름 쓰기</h2>
+        <div class="activity-content-wrapper">
+            <div class="activity2-left">
+                <img src="act1.png" alt="UN 참전국 지도" class="responsive-image act1-image">
             </div>
-            <button class="nav-button next-activity-button" id="quiz-next-button" data-target-page="activity3-page" disabled>🚀</button>
+            <div class="activity2-right">
+                <div class="quiz-container">
+                    <div class="flags-container">
+                        </div>
+                    <div class="names-container">
+                        </div>
+                </div>
+                <button class="nav-button next-activity-button" id="quiz-next-button" data-target-page="activity3-page" disabled>🚀</button>
+            </div>
         </div>
     </div>
 
@@ -74,28 +75,32 @@
         </div>
         <div class="drawing-controls">
             <input type="color" id="color-picker" value="#FF6F61">
+            <button id="draw-button" class="active">그리기</button>
             <button id="eraser-button">지우개</button>
+            <button id="pan-button">이동</button>
         </div>
         <button class="nav-button next-activity-button" data-target-page="activity4-page">🚀</button>
     </div>
 
-    <div id="activity4-page" class="page hidden activity4-container">
+    <div id="activity4-page" class="page hidden">
         <h2 class="activity-title">전쟁 속 사람들, 사진으로 만나요!</h2>
-        <div class="activity4-left">
-            <div class="slider-container vertical-slider">
-                <div class="slider-images">
-                    <img src="job1.gif" alt="직업 1" class="slider-image active">
-                    <img src="job2.gif" alt="직업 2" class="slider-image">
-                    <img src="job3.gif" alt="직업 3" class="slider-image">
-                    <img src="job4.gif" alt="직업 4" class="slider-image">
-                    <img src="job5.gif" alt="직업 5" class="slider-image">
+        <div class="activity-content-wrapper">
+            <div class="activity4-left">
+                <div class="slider-container vertical-slider">
+                    <div class="slider-images">
+                        <img src="job1.gif" alt="직업 1" class="slider-image active">
+                        <img src="job2.gif" alt="직업 2" class="slider-image">
+                        <img src="job3.gif" alt="직업 3" class="slider-image">
+                        <img src="job4.gif" alt="직업 4" class="slider-image">
+                        <img src="job5.gif" alt="직업 5" class="slider-image">
+                    </div>
+                    <button class="slider-prev">&lt;</button>
+                    <button class="slider-next">&gt;</button>
                 </div>
-                <button class="slider-prev">&lt;</button>
-                <button class="slider-next">&gt;</button>
             </div>
-        </div>
-        <div class="activity4-right">
-            <textarea class="note-textarea" placeholder="여기에 내용을 입력하세요..."></textarea>
+            <div class="activity4-right">
+                <textarea class="note-textarea" placeholder="여기에 내용을 입력하세요..."></textarea>
+            </div>
         </div>
         <button class="nav-button finish-button" id="finish-button">🎉</button>
     </div>
