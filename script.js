@@ -390,6 +390,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDraggingImage || isDrawingMode) return;
             translateX = e.clientX - startX;
             translateY = e.clientY - startY;
+
+            // *** 수정된 부분: translateX, translateY 값에 clamp를 적용하여 범위 제한 ***
+            const maxTranslationRange = 3000; // 허용 가능한 최대 이동 범위 (픽셀)
+            translateX = Math.max(-maxTranslationRange, Math.min(maxTranslationRange, translateX));
+            translateY = Math.max(-maxTranslationRange, Math.min(maxTranslationRange, translateY));
+
             applyTransform();
         });
 
