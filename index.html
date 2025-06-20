@@ -8,9 +8,10 @@
 </head>
 <body>
     <div id="landing-page" class="page active">
-        <h1 class="main-title">6.25전쟁, 우리 곁에 누가 있었을까?</h1>
-        <p class="teacher-name">지은선생님</p>
-        <button id="start-button" class="main-button">수업 시작하기</button>
+        <div class="landing-content">
+            <h1 class="main-title">6.25전쟁, 우리 곁에 누가 있었을까?</h1>
+            <button id="start-button" class="main-button">수업 시작하기</button>
+        </div>
     </div>
 
     <div id="toc-page" class="page hidden">
@@ -19,7 +20,7 @@
                 <p>1950년 여름, 그림으로 떠나요!</p>
                 <span class="next-icon">🚀</span>
             </div>
-            <div class="activity-box" data-target-page="activity2-intro-page">
+            <div class="activity-box" data-target-page="activity2-page">
                 <p>UN 참전국 이름 쓰기</p>
                 <span class="next-icon">🚀</span>
             </div>
@@ -45,31 +46,24 @@
             <button class="slider-prev">&lt;</button>
             <button class="slider-next">&gt;</button>
         </div>
-        <button class="nav-button next-activity-button" data-target-page="activity2-intro-page">🚀</button>
+        <button class="nav-button next-activity-button" data-target-page="activity2-page">🚀</button>
     </div>
 
-    <div id="activity2-intro-page" class="page hidden">
-        <h2 class="activity-title">UN 참전국 이름 쓰기</h2>
-        <div class="activity2-content">
-            <div class="activity2-image-container">
-                <img src="act1.png" alt="활동 1 이미지" class="responsive-image">
-            </div>
-            <div class="activity2-text-container">
-                <p class="quiz-intro-text">퀴즈를 풀며 함께 채워보아요</p>
-            </div>
+    <div id="activity2-page" class="page hidden activity2-container">
+        <div class="activity2-left">
+            <h2 class="activity-title">UN 참전국 이름 쓰기</h2>
+            <img src="act1.png" alt="UN 참전국 지도" class="responsive-image act1-image">
         </div>
-        <button class="nav-button next-activity-button" data-target-page="activity2-quiz-page">🚀</button>
-    </div>
-
-    <div id="activity2-quiz-page" class="page hidden">
-        <h2 class="activity-title">UN 참전국 이름 쓰기 - 퀴즈</h2>
-        <div class="quiz-container">
-            <div class="flags-container">
-                </div>
-            <div class="names-container">
-                </div>
+        <div class="activity2-right">
+            <h2 class="activity-title quiz-title">UN 참전국 이름 쓰기 - 퀴즈</h2>
+            <div class="quiz-container">
+                <div class="flags-container">
+                    </div>
+                <div class="names-container">
+                    </div>
+            </div>
+            <button class="nav-button next-activity-button" id="quiz-next-button" data-target-page="activity3-page" disabled>🚀</button>
         </div>
-        <button class="nav-button next-activity-button" id="quiz-next-button" data-target-page="activity3-page" disabled>🚀</button>
     </div>
 
     <div id="activity3-page" class="page hidden">
@@ -78,25 +72,35 @@
             <img src="act2.jpg" alt="세계 지도" class="drawing-background">
             <canvas id="drawing-canvas"></canvas>
         </div>
+        <div class="drawing-controls">
+            <input type="color" id="color-picker" value="#FF6F61">
+            <button id="eraser-button">지우개</button>
+        </div>
         <button class="nav-button next-activity-button" data-target-page="activity4-page">🚀</button>
     </div>
 
-    <div id="activity4-page" class="page hidden">
+    <div id="activity4-page" class="page hidden activity4-container">
         <h2 class="activity-title">전쟁 속 사람들, 사진으로 만나요!</h2>
-        <div class="slider-container">
-            <div class="slider-images">
-                <img src="job1.gif" alt="직업 1" class="slider-image active">
-                <img src="job2.gif" alt="직업 2" class="slider-image">
-                <img src="job3.gif" alt="직업 3" class="slider-image">
-                <img src="job4.gif" alt="직업 4" class="slider-image">
-                <img src="job5.gif" alt="직업 5" class="slider-image">
+        <div class="activity4-left">
+            <div class="slider-container vertical-slider">
+                <div class="slider-images">
+                    <img src="job1.gif" alt="직업 1" class="slider-image active">
+                    <img src="job2.gif" alt="직업 2" class="slider-image">
+                    <img src="job3.gif" alt="직업 3" class="slider-image">
+                    <img src="job4.gif" alt="직업 4" class="slider-image">
+                    <img src="job5.gif" alt="직업 5" class="slider-image">
+                </div>
+                <button class="slider-prev">&lt;</button>
+                <button class="slider-next">&gt;</button>
             </div>
-            <button class="slider-prev">&lt;</button>
-            <button class="slider-next">&gt;</button>
         </div>
-        <textarea class="note-textarea" placeholder="여기에 내용을 입력하세요..."></textarea>
+        <div class="activity4-right">
+            <textarea class="note-textarea" placeholder="여기에 내용을 입력하세요..."></textarea>
+        </div>
         <button class="nav-button finish-button" id="finish-button">🎉</button>
     </div>
+
+    <div id="fireworks-container"></div>
 
     <script src="script.js"></script>
 </body>
