@@ -331,18 +331,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!isDrawingMode) return;
             isDrawing = true;
             ctx.beginPath();
-            const rect = canvas.getBoundingClientRect();
-            // 스케일 및 이동을 고려한 실제 캔버스 좌표 계산
-            const x = (e.clientX - rect.left) / scale - translateX / scale;
-            const y = (e.clientY - rect.top) / scale - translateY / scale;
+            // --- 수정된 부분: 마우스 좌표를 drawingContainer 기준으로 계산 후 역변환 ---
+            const containerRect = drawingContainer.getBoundingClientRect();
+            const mouseXInContainer = e.clientX - containerRect.left;
+            const mouseYInContainer = e.clientY - containerRect.top;
+            const x = (mouseXInContainer - translateX) / scale;
+            const y = (mouseYInContainer - translateY) / scale;
+            // --- END 수정된 부분 ---
             ctx.moveTo(x, y);
         });
 
         canvas.addEventListener('mousemove', (e) => {
             if (!isDrawing || !isDrawingMode) return;
-            const rect = canvas.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / scale - translateX / scale;
-            const y = (e.clientY - rect.top) / scale - translateY / scale;
+            // --- 수정된 부분: 마우스 좌표를 drawingContainer 기준으로 계산 후 역변환 ---
+            const containerRect = drawingContainer.getBoundingClientRect();
+            const mouseXInContainer = e.clientX - containerRect.left;
+            const mouseYInContainer = e.clientY - containerRect.top;
+            const x = (mouseXInContainer - translateX) / scale;
+            const y = (mouseYInContainer - translateY) / scale;
+            // --- END 수정된 부분 ---
             ctx.lineTo(x, y);
             ctx.stroke();
         });
