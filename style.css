@@ -1,717 +1,516 @@
-@font-face {
-    font-family: 'SejongGeulggot';
-    src: url('SejongGeulggot.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-body {
-    margin: 0;
-    font-family: 'SejongGeulggot', sans-serif;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-image: url('classbg.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    position: relative;
-}
-
-/* body::before는 전체 배경에 반투명 레이어를 깔아서 가독성을 높입니다. */
-body::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5); /* 검은색 50% 투명도 */
-    z-index: -1; /* 배경 이미지 뒤로 보냅니다. */
-}
-
-.page {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    text-align: center;
-    box-sizing: border-box;
-    padding: 20px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-    /* 페이지 전환 시 z-index를 사용하여 클릭 이벤트를 활성화합니다. */
-    z-index: 1; /* 기본 z-index */
-}
-
-.page.active {
-    opacity: 1;
-    visibility: visible;
-    z-index: 2; /* 활성화된 페이지를 더 앞으로 가져옵니다. */
-}
-
-/* 첫 번째 페이지 스타일 */
-#landing-page .landing-content {
-    background-color: rgba(255, 255, 255, 0.1); /* 투명도 0.1로 더 투명하게 조정 */
-    padding: 60px; /* 패딩 조정으로 크기 조절 */
-    width: 80%; /* 너비 증가 */
-    max-width: 1000px; /* 최대 너비 설정 */
-    border-radius: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    box-sizing: border-box;
-}
-
-.main-title {
-    font-size: 4em; /* 제목 폰트 크기 줄임 */
-    margin-bottom: 40px; /* 여백 조정 */
-    font-weight: bold;
-    color: #FFD700; /* 노란색으로 변경 */
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    line-height: 1.3; /* 줄 간격 추가 */
-}
-
-.main-button {
-    background-color: #A0522D;
-    color: white;
-    padding: 20px 40px;
-    font-size: 2em;
-    border: none;
-    border-radius: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-    font-family: 'SejongGeulggot', sans-serif;
-}
-
-.main-button:hover {
-    background-color: #B8860B;
-}
-
-/* 목차 페이지 스타일 */
-.activity-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
-    max-width: 1200px;
-    width: 90%;
-}
-
-.activity-box {
-    background-color: rgba(139, 69, 19, 0.8);
-    border: 2px solid #FFD700;
-    border-radius: 15px;
-    padding: 30px;
-    cursor: pointer;
-    transition: transform 0.3s ease, background-color 0.3s ease;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-}
-
-.activity-box:hover {
-    transform: translateY(-10px);
-    background-color: rgba(160, 82, 45, 0.9);
-}
-
-.activity-box p {
-    font-size: 2em;
-    margin: 0;
-    color: white;
-    font-weight: bold;
-}
-
-.next-icon {
-    font-size: 2.5em;
-    position: absolute;
-    bottom: 15px;
-    right: 15px;
-    transition: transform 0.3s ease;
-}
-
-.activity-box:hover .next-icon {
-    transform: translateX(5px);
-}
-
-/* 활동 페이지 공통 제목 */
-.activity-title {
-    font-size: 3em;
-    margin-bottom: 30px;
-    font-weight: bold;
-    color: #FFD700;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-}
-
-/* 1번 활동 페이지 스타일 */
-#activity1-page .slider-container {
-    position: relative;
-    width: 80%;
-    max-width: 1000px;
-    height: 70vh;
-    overflow: hidden;
-    border: 5px solid #FFD700;
-    border-radius: 15px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    background-color: rgba(0, 0, 0, 0.95); /* 배경 투명도 0.95로 더 불투명하게 조정 (그림에 집중) */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-#activity1-page .slider-images {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-    position: relative;
-}
-
-#activity1-page .slider-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    flex-shrink: 0;
-    display: none;
-}
-
-#activity1-page .slider-image.active {
-    display: block;
-}
-
-#activity1-page .slider-prev,
-#activity1-page .slider-next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 2em;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    z-index: 10;
-}
-
-#activity1-page .slider-prev:hover,
-#activity1-page .slider-next:hover {
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-#activity1-page .slider-prev {
-    left: 10px;
-}
-
-#activity1-page .slider-next {
-    right: 10px;
-}
-
-/* 다음 활동으로 넘어가는 공통 버튼 */
-.nav-button {
-    background-color: #8B4513;
-    color: white;
-    padding: 10px 20px;
-    font-size: 1.5em;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 30px;
-    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
-    font-family: 'SejongGeulggot', sans-serif; /* 폰트 적용 */
-}
-
-.nav-button:hover {
-    background-color: #A0522D;
-}
-
-.nav-button:disabled {
-    background-color: #555;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-/* 2번 활동 페이지 스타일 */
-#activity2-page {
-    flex-direction: column; /* 전체를 세로로 정렬 */
-    justify-content: flex-start; /* 상단 정렬 */
-    align-items: center;
-    gap: 20px; /* 전체 컨텐츠와 버튼 사이 간격 */
-    max-width: 1400px;
-    width: 95vw;
-}
-
-#activity2-page .activity2-full-width-title {
-    width: 100%;
-    text-align: center;
-}
-
-#activity2-page .activity2-content-wrapper {
-    display: flex; /* 왼쪽-오른쪽 정렬을 위한 래퍼 */
-    flex-direction: row;
-    justify-content: center;
-    align-items: flex-start; /* 내용물 상단 정렬 */
-    gap: 30px;
-    width: 100%; /* 래퍼 전체 너비 */
-    flex-grow: 1; /* 남은 공간 차지 */
-}
-
-.activity2-left {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1; /* 남은 공간 균등 분배 */
-    min-width: 400px;
-}
-
-.activity2-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex: 1; /* 남은 공간 균등 분배 */
-    min-width: 400px;
-}
-
-.act1-image {
-    max-width: 100%;
-    max-height: 70vh; /* 화면 높이에 따라 이미지 크기 조정 */
-    height: auto;
-    border: 3px solid #FFD700;
-    border-radius: 10px;
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-    margin-bottom: 0; /* 필요 없는 마진 제거 */
-}
-
-#activity2-page .quiz-container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    margin-top: 0;
-    flex-grow: 1; /* 남은 공간 차지 */
-}
-
-/* 퀴즈 제목은 삭제되었으므로 관련 스타일 제거 또는 필요 시 주석 처리 */
-/* #activity2-page .quiz-title {
-    font-size: 2.5em;
-    margin-bottom: 15px;
-} */
-
-#activity2-page .flags-container,
-#activity2-page .names-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-    gap: 10px;
-    justify-items: center;
-    align-items: center;
-    padding: 10px;
-    border: 2px dashed #FFD700;
-    border-radius: 10px;
-    min-height: 100px;
-}
-
-#activity2-page .flag-item {
-    width: 60px;
-    height: 40px;
-    object-fit: contain;
-    cursor: grab;
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-    transition: transform 0.1s ease;
-}
-
-#activity2-page .flag-item.dragging {
-    opacity: 0.7;
-    transform: scale(1.1);
-}
-
-#activity2-page .name-box {
-    width: 80px;
-    height: 30px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 2px solid #FFD700;
-    border-radius: 5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1em;
-    color: white;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    position: relative;
-}
-
-#activity2-page .name-text {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-}
-
-#activity2-page .nav-button {
-    margin-top: 20px;
-}
-
-/* 3번 활동 페이지 스타일 */
-#activity3-page .drawing-container {
-    position: relative;
-    width: 80%;
-    max-width: 1000px;
-    height: 70vh;
-    border: 5px solid #FFD700;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    background-color: #222;
-    cursor: grab; /* 이동 모드 기본 커서 */
-}
-
-#activity3-page .drawing-container.drawing-mode {
-    cursor: crosshair; /* 그리기 모드 커서 */
-}
-
-#activity3-page .drawing-background {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    transform-origin: 0 0; /* 이미지 확대/이동의 기준점 */
-    transition: transform 0.05s ease-out; /* 부드러운 이동/확대 */
-}
-
-#activity3-page #drawing-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    background-color: transparent;
-    /* 그리기 모드일 때 커서가 crosshair로 바뀝니다 (JS에서 클래스 토글) */
-}
-
-#activity3-page .drawing-controls {
-    margin-top: 20px;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    flex-wrap: wrap; /* 작은 화면에서 줄바꿈 */
-    justify-content: center;
-}
-
-#activity3-page #color-picker {
-    -webkit-appearance: none;
-    width: 40px; /* 크기 줄임 */
-    height: 40px; /* 크기 줄임 */
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    background: none; /* 기본 배경 제거 */
-    border: 2px solid #FFD700; /* 테두리 추가 */
-}
-
-#activity3-page #color-picker::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-
-#activity3-page #color-picker::-webkit-color-swatch {
-    border: none;
-    border-radius: 3px; /* 내부 색상 표시도 둥글게 */
-}
-
-#activity3-page #eraser-button,
-#activity3-page #draw-mode-button,
-#activity3-page #move-zoom-mode-button {
-    background-color: #555;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-family: 'SejongGeulggot', sans-serif;
-    font-size: 1.2em;
-    transition: background-color 0.3s ease, border 0.3s ease;
-}
-
-#activity3-page #eraser-button:hover,
-#activity3-page #draw-mode-button:hover,
-#activity3-page #move-zoom-mode-button:hover {
-    background-color: #777;
-}
-
-#activity3-page #draw-mode-button.active,
-#activity3-page #move-zoom-mode-button.active {
-    background-color: #A0522D; /* 활성화된 모드 버튼 색상 */
-    border: 2px solid #FFD700;
-}
-
-/* 4번 활동 페이지 스타일 */
-#activity4-page {
-    flex-direction: column;
-    justify-content: flex-start;
-    padding-top: 50px;
-}
-
-#activity4-page .activity4-content-wrapper {
-    display: flex;
-    flex-direction: row; /* 좌우 배치 */
-    justify-content: center;
-    align-items: flex-start;
-    width: 90%;
-    max-width: 1400px;
-    gap: 30px;
-    flex-grow: 1;
-    margin-top: 30px;
-}
-
-.activity4-left {
-    flex: 1;
-    min-width: 450px;
-    max-width: 600px;
-    height: 60vh; /* 적절한 높이 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 5px solid #FFD700;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-/* 4번 활동 슬라이더 */
-.activity4-left .slider-container {
-    flex-direction: row; /* 가로 슬라이드 */
-    width: 100%;
-    height: 100%;
-    border: none;
-    border-radius: 0;
-    box-shadow: none;
-    background-color: transparent;
-    position: relative;
-}
-
-.activity4-left .slider-images {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.5s ease-in-out;
-    position: relative;
-    justify-content: center; /* 이미지 중앙 정렬 */
-    align-items: center; /* 이미지 중앙 정렬 */
-}
-
-.activity4-left .slider-image {
-    width: 100%; /* 이미지가 슬라이더 컨테이너 너비에 맞게 */
-    height: 100%; /* 이미지가 슬라이더 컨테이너 높이에 맞게 */
-    object-fit: contain; /* 비율 유지하며 컨테이너에 맞게 */
-    flex-shrink: 0;
-    display: none;
-}
-
-.activity4-left .slider-image.active {
-    display: block;
-}
-
-.activity4-left .slider-prev,
-.activity4-left .slider-next {
-    position: absolute;
-    top: 50%; /* 세로 중앙 */
-    transform: translateY(-50%); /* 정확한 세로 중앙 정렬 */
-    background-color: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    font-size: 2em;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    z-index: 10;
-}
-
-.activity4-left .slider-prev {
-    left: 10px; /* 왼쪽 배치 */
-}
-
-.activity4-left .slider-next {
-    right: 10px; /* 오른쪽 배치 */
-}
-
-
-.activity4-right {
-    flex: 1;
-    min-width: 450px;
-    max-width: 600px;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-}
-
-.note-textarea {
-    width: 90%;
-    height: 60vh; /* 높이 조정 */
-    padding: 20px;
-    font-family: 'SejongGeulggot', sans-serif;
-    font-size: 1.6em;
-    border: 2px solid #FFD700;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.8);
-    color: #333;
-    resize: none;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.finish-button {
-    font-size: 2em;
-    padding: 15px 30px;
-    margin-top: 30px;
-    align-self: center;
-}
-
-/* 폭죽 컨테이너 */
-#fireworks-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10000;
-}
-
-.firework {
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    background-color: #ff0;
-    border-radius: 50%;
-    opacity: 0;
-    pointer-events: none;
-}
-
-@keyframes firework-explode {
-    0% {
-        transform: translate(-50%, -50%) scale(0);
-        opacity: 1;
+document.addEventListener('DOMContentLoaded', () => {
+    const pages = document.querySelectorAll('.page');
+    let currentPageId = 'landing-page';
+
+    // 페이지 전환 함수
+    function showPage(pageId) {
+        pages.forEach(page => {
+            if (page.id === pageId) {
+                page.classList.add('active');
+                page.classList.remove('hidden');
+                page.style.zIndex = '10';
+            } else {
+                page.classList.remove('active');
+                page.classList.add('hidden');
+                page.style.zIndex = '1';
+            }
+        });
+        currentPageId = pageId;
     }
-    100% {
-        transform: translate(-50%, -50%) scale(1.5);
-        opacity: 0;
-    }
-}
 
-/* 미디어 쿼리 */
-@media (max-width: 1024px) {
-    .main-title {
-        font-size: 3.5em; /* 중간 사이즈 화면에서 제목 크기 조정 */
-    }
-    #landing-page .landing-content {
-        padding: 50px;
-        width: 80%;
-    }
-    .activity-title {
-        font-size: 2.5em;
-    }
-    #activity2-page .activity2-content-wrapper {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .activity2-left, .activity2-right {
-        width: 90%;
-        min-width: unset;
-    }
-    #activity4-page .activity4-content-wrapper {
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-    }
-    .activity4-left, .activity4-right {
-        width: 90%;
-        min-width: unset;
-        height: auto;
-    }
-    .note-textarea {
-        height: 30vh;
-        font-size: 1.2em;
-    }
-    #activity3-page .drawing-controls {
-        flex-direction: column;
-    }
-}
+    // 초기 페이지 설정
+    showPage('landing-page');
 
-@media (max-width: 768px) {
-    .main-title {
-        font-size: 2.5em; /* 모바일 화면에서 제목 크기 조정 */
+    // 1. 첫 페이지: 수업 시작하기 버튼
+    const startButton = document.getElementById('start-button');
+    if (startButton) {
+        startButton.addEventListener('click', () => {
+            showPage('toc-page');
+        });
     }
-    .main-button {
-        font-size: 1.5em;
-        padding: 15px 30px;
+
+    // 목차 페이지: 활동 박스 클릭
+    document.querySelectorAll('.activity-box').forEach(box => {
+        box.addEventListener('click', (event) => {
+            const targetPageId = box.dataset.targetPage;
+            if (targetPageId) {
+                showPage(targetPageId);
+            }
+        });
+    });
+
+    // 다음 활동으로 넘어가는 공통 버튼 (🚀 아이콘)
+    document.querySelectorAll('.nav-button:not(#quiz-next-button):not(#finish-button)').forEach(button => {
+        button.addEventListener('click', (event) => {
+            const targetPageId = button.dataset.targetPage;
+            if (targetPageId) {
+                showPage(targetPageId);
+            }
+        });
+    });
+
+    // --- 1번 활동: 이미지 슬라이더 (첫 번째 슬라이더) ---
+    const sliderContainers = document.querySelectorAll('#activity1-page .slider-container');
+
+    sliderContainers.forEach(container => {
+        const images = container.querySelectorAll('.slider-image');
+        const prevButton = container.querySelector('.slider-prev');
+        const nextButton = container.querySelector('.slider-next');
+        let currentIndex = 0;
+
+        function showImage(index) {
+            images.forEach((img, i) => {
+                img.classList.remove('active');
+                if (i === index) {
+                    img.classList.add('active');
+                }
+            });
+        }
+
+        if (prevButton && nextButton) {
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                showImage(currentIndex);
+            });
+
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            });
+        }
+
+        showImage(currentIndex);
+    });
+
+    // --- 2번 활동: 국가 퀴즈 (드래그 앤 드롭) ---
+    const countries = [
+        "뉴질랜드", "덴마크", "독일", "룩셈부르크", "미국", "벨기에", "스웨덴", "에티오피아", "영국", "이탈리아",
+        "인도", "캐나다", "콜롬비아", "태국", "튀르키예", "프랑스", "필리핀", "호주", "그리스", "남아공", "네덜란드", "노르웨이"
+    ];
+
+    const flagsContainer = document.querySelector('#activity2-page .flags-container');
+    const namesContainer = document.querySelector('#activity2-page .names-container');
+    const quizNextButton = document.getElementById('quiz-next-button');
+    let correctMatches = 0;
+    const totalCountries = countries.length;
+
+    function initializeQuiz() {
+        flagsContainer.innerHTML = '';
+        namesContainer.innerHTML = '';
+        correctMatches = 0;
+
+        // 국기 섞어서 배치
+        const shuffledFlags = [...countries].sort(() => Math.random() - 0.5);
+        shuffledFlags.forEach(country => {
+            const img = document.createElement('img');
+            img.src = `${country}.gif`;
+            img.alt = country;
+            img.classList.add('flag-item');
+            img.draggable = true;
+            img.dataset.country = country;
+            flagsContainer.appendChild(img);
+        });
+
+        // 국가명 텍스트 박스 섞어서 배치
+        const shuffledNames = [...countries].sort(() => Math.random() - 0.5);
+        shuffledNames.forEach(country => {
+            const div = document.createElement('div');
+            div.classList.add('name-box');
+            div.dataset.country = country;
+            div.innerHTML = `<span class="name-text">${country}</span>`;
+            namesContainer.appendChild(div);
+        });
+
+        addDragAndDropListeners();
+        updateQuizNextButton();
     }
-    #landing-page .landing-content {
-        padding: 30px;
+
+    function addDragAndDropListeners() {
+        let draggedItem = null;
+
+        document.querySelectorAll('#activity2-page .flag-item').forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = e.target;
+                setTimeout(() => {
+                    e.target.classList.add('dragging');
+                }, 0);
+            });
+
+            item.addEventListener('dragend', (e) => {
+                e.target.classList.remove('dragging');
+                draggedItem = null;
+            });
+        });
+
+        document.querySelectorAll('#activity2-page .name-box').forEach(box => {
+            box.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                if (!box.classList.contains('correct') && !box.classList.contains('occupied')) {
+                    box.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+                }
+            });
+
+            box.addEventListener('dragleave', (e) => {
+                if (!box.classList.contains('correct') && !box.classList.contains('occupied')) {
+                    box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                }
+            });
+
+            box.addEventListener('drop', (e) => {
+                e.preventDefault();
+                box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+
+                if (draggedItem && !box.classList.contains('correct') && !box.classList.contains('occupied')) {
+                    const flagCountry = draggedItem.dataset.country;
+                    const boxCountry = box.dataset.country;
+
+                    if (flagCountry === boxCountry) {
+                        box.classList.add('correct');
+                        box.classList.remove('occupied');
+                        box.innerHTML = '';
+                        box.appendChild(draggedItem);
+                        draggedItem.draggable = false;
+                        draggedItem.style.position = 'static';
+                        draggedItem.style.width = '100%';
+                        draggedItem.style.height = '100%';
+                        draggedItem.style.objectFit = 'contain';
+                        correctMatches++;
+                        updateQuizNextButton();
+                    } else {
+                        box.classList.add('occupied');
+                        box.style.backgroundColor = 'rgba(255, 0, 0, 0.4)'; // 오답 시 빨간색
+                        setTimeout(() => {
+                            box.classList.remove('occupied');
+                            box.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+                        }, 500);
+                        // 오답 시 국기 원위치로 (flagsContainer에 다시 추가)
+                        flagsContainer.appendChild(draggedItem);
+                        draggedItem.style.width = ''; // 인라인 스타일 초기화
+                        draggedItem.style.height = '';
+                        draggedItem.style.objectFit = '';
+                    }
+                }
+            });
+        });
     }
-    .activity-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
+
+    function updateQuizNextButton() {
+        if (correctMatches === totalCountries) {
+            quizNextButton.disabled = false;
+            quizNextButton.style.backgroundColor = '#8B4513';
+            quizNextButton.style.cursor = 'pointer';
+        } else {
+            quizNextButton.disabled = true;
+            quizNextButton.style.backgroundColor = '#555';
+            quizNextButton.style.cursor = 'not-allowed';
+        }
     }
-    .activity-box p {
-        font-size: 1.5em;
+
+    const observerQuizPage = new MutationObserver((mutationsList) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                if (document.getElementById('activity2-page').classList.contains('active')) {
+                    initializeQuiz();
+                }
+            }
+        }
+    });
+    observerQuizPage.observe(document.getElementById('activity2-page'), { attributes: true });
+
+    // --- 3번 활동: 지도 칠하기 (캔버스 드로잉 & 이미지 이동/확대) ---
+    const canvas = document.getElementById('drawing-canvas');
+    const drawingContainer = document.querySelector('#activity3-page .drawing-container');
+    const colorPicker = document.getElementById('color-picker');
+    const eraserButton = document.getElementById('eraser-button');
+    const drawModeButton = document.getElementById('draw-mode-button');
+    const moveZoomModeButton = document.getElementById('move-zoom-mode-button');
+    const drawingBackground = document.querySelector('#activity3-page .drawing-background');
+    const ctx = canvas ? canvas.getContext('2d') : null;
+
+    let isDrawing = false;
+    let currentColor = colorPicker ? colorPicker.value : '#FF6F61';
+    let isErasing = false;
+    let isDrawingMode = true; // 그리기 모드가 기본
+    let scale = 1;
+    let translateX = 0;
+    let translateY = 0;
+    let startX = 0;
+    let startY = 0;
+    let isDraggingImage = false;
+
+    // 캔버스 크기 조정 함수
+    function resizeCanvas() {
+        if (canvas && drawingContainer) {
+            const containerRect = drawingContainer.getBoundingClientRect();
+            canvas.width = containerRect.width;
+            canvas.height = containerRect.height;
+
+            // 캔버스 초기화 후 기존 그리기 설정 복원
+            if (ctx) {
+                ctx.lineWidth = isErasing ? 20 : 5;
+                ctx.lineCap = 'round';
+                ctx.strokeStyle = isErasing ? '#222' : currentColor;
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+            }
+        }
     }
-    .activity-title {
-        font-size: 2em;
-        margin-bottom: 20px;
+
+    // 이미지 변환 적용 함수
+    function applyTransform() {
+        drawingBackground.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
+        canvas.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`; // 캔버스도 동일하게 이동/확대
+        canvas.style.transformOrigin = `0 0`; // 캔버스도 좌상단 기준
     }
-    #activity1-page .slider-container {
-        height: 60vh;
+
+    // 모드 전환 함수
+    function setMode(mode) {
+        isDrawingMode = (mode === 'draw');
+        if (isDrawingMode) {
+            drawingContainer.classList.add('drawing-mode'); // 캔버스 커서 변경용
+            drawModeButton.classList.add('active');
+            moveZoomModeButton.classList.remove('active');
+            if (ctx) { // 그리기 모드일 때 캔버스 상호작용 활성화
+                canvas.style.pointerEvents = 'auto';
+                // *** 수정된 부분: 그리기 모드로 전환 시 항상 선 두께 및 스타일을 재설정 ***
+                ctx.lineWidth = isErasing ? 20 : 5; // 지우개 상태에 따라 두께 설정
+                ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개 상태에 따라 색상 설정
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+            }
+        } else { // 이동/확대 모드
+            drawingContainer.classList.remove('drawing-mode');
+            drawModeButton.classList.remove('active');
+            moveZoomModeButton.classList.add('active');
+            if (ctx) { // 이동/확대 모드일 때 캔버스 상호작용 비활성화 (이미지 이동에만 집중)
+                canvas.style.pointerEvents = 'none';
+            }
+        }
     }
-    .act1-image {
-        max-width: 90%;
+
+    window.addEventListener('resize', resizeCanvas);
+
+    const observerDrawingPage = new MutationObserver((mutationsList) => {
+        for (let mutation of mutationsList) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                if (document.getElementById('activity3-page').classList.contains('active')) {
+                    resizeCanvas();
+                    if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height); // 페이지 진입 시 캔버스 초기화
+                    // 캔버스 초기화 후 드로잉 모드 기본값으로 재설정 (펜, 코랄색)
+                    isErasing = false;
+                    currentColor = colorPicker.value;
+                    if (ctx) {
+                        ctx.lineWidth = 5;
+                        ctx.strokeStyle = currentColor;
+                        ctx.globalCompositeOperation = 'source-over';
+                    }
+                    scale = 1;
+                    translateX = 0;
+                    translateY = 0;
+                    applyTransform(); // 이미지 위치/크기 초기화
+                    setMode('draw'); // 초기 모드 그리기
+                }
+            }
+        }
+    });
+    observerDrawingPage.observe(document.getElementById('activity3-page'), { attributes: true });
+
+
+    if (canvas && ctx && drawingContainer && colorPicker && eraserButton && drawModeButton && moveZoomModeButton) {
+        // 그리기 모드 이벤트
+        canvas.addEventListener('mousedown', (e) => {
+            if (!isDrawingMode) return;
+            isDrawing = true;
+            ctx.beginPath();
+            const rect = canvas.getBoundingClientRect();
+            // 스케일 및 이동을 고려한 실제 캔버스 좌표 계산
+            const x = (e.clientX - rect.left) / scale - translateX / scale;
+            const y = (e.clientY - rect.top) / scale - translateY / scale;
+            ctx.moveTo(x, y);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isDrawing || !isDrawingMode) return;
+            const rect = canvas.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / scale - translateX / scale;
+            const y = (e.clientY - rect.top) / scale - translateY / scale;
+            ctx.lineTo(x, y);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            if (!isDrawingMode) return;
+            isDrawing = false;
+            ctx.closePath();
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            if (!isDrawingMode) return;
+            isDrawing = false;
+            ctx.closePath();
+        });
+
+        // 색상 변경
+        colorPicker.addEventListener('input', (e) => {
+            currentColor = e.target.value;
+            isErasing = false;
+            // setMode('draw') 내에서 lineWidth, strokeStyle, globalCompositeOperation이 설정되므로 여기서는 삭제
+            setMode('draw'); // 색상 선택 시 자동으로 그리기 모드
+        });
+
+        // 지우개 기능
+        eraserButton.addEventListener('click', () => {
+            isErasing = true;
+            // setMode('draw') 내에서 lineWidth, strokeStyle, globalCompositeOperation이 설정되므로 여기서는 삭제
+            setMode('draw'); // 지우개도 그리기 모드의 일종으로 간주
+        });
+
+        // 모드 전환 버튼
+        drawModeButton.addEventListener('click', () => setMode('draw'));
+        moveZoomModeButton.addEventListener('click', () => setMode('move_zoom'));
+
+
+        // 이동/확대 모드 이벤트
+        drawingContainer.addEventListener('mousedown', (e) => {
+            if (isDrawingMode) return; // 그리기 모드에서는 작동 안 함
+            isDraggingImage = true;
+            startX = e.clientX - translateX;
+            startY = e.clientY - translateY;
+            drawingContainer.style.cursor = 'grabbing';
+        });
+
+        drawingContainer.addEventListener('mousemove', (e) => {
+            if (!isDraggingImage || isDrawingMode) return;
+            translateX = e.clientX - startX;
+            translateY = e.clientY - startY;
+            applyTransform();
+        });
+
+        drawingContainer.addEventListener('mouseup', () => {
+            if (isDrawingMode) return;
+            isDraggingImage = false;
+            drawingContainer.style.cursor = 'grab';
+        });
+
+        drawingContainer.addEventListener('mouseout', () => {
+            if (isDrawingMode) return;
+            isDraggingImage = false;
+            drawingContainer.style.cursor = 'grab';
+        });
+
+        drawingContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            if (isDrawingMode) return; // 그리기 모드에서는 확대/축소 작동 안 함
+
+            const scaleAmount = 0.1;
+            const mouseX = e.clientX - drawingContainer.getBoundingClientRect().left;
+            const mouseY = e.clientY - drawingContainer.getBoundingClientRect().top;
+
+            const oldScale = scale;
+
+            if (e.deltaY < 0) { // 휠 위로 (확대)
+                scale += scaleAmount;
+            } else { // 휠 아래로 (축소)
+                scale -= scaleAmount;
+            }
+
+            // 스케일 제한
+            scale = Math.max(0.5, Math.min(3, scale));
+
+            // 확대/축소 시 이미지 중심 유지
+            translateX -= (mouseX / oldScale) * (scale - oldScale);
+            translateY -= (mouseY / oldScale) * (scale - oldScale);
+
+            applyTransform();
+        });
+
+        setMode('draw'); // 초기 모드 설정
     }
-    #activity2-page .quiz-container {
-        width: 90%;
+
+
+    // --- 4번 활동: 사진 슬라이드 및 필기창 ---
+    // horizontal-slider 클래스를 가진 슬라이더 (4번 활동 전용)
+    const horizontalSliderContainer = document.querySelector('#activity4-page .horizontal-slider');
+
+    if (horizontalSliderContainer) {
+        const images = horizontalSliderContainer.querySelectorAll('.slider-image');
+        const prevButton = horizontalSliderContainer.querySelector('.slider-prev');
+        const nextButton = horizontalSliderContainer.querySelector('.slider-next');
+        let currentIndex = 0;
+
+        function showImage(index) {
+            images.forEach((img, i) => {
+                img.classList.remove('active');
+                if (i === index) {
+                    img.classList.add('active');
+                }
+            });
+        }
+
+        if (prevButton && nextButton) {
+            prevButton.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + images.length) % images.length;
+                showImage(currentIndex);
+            });
+
+            nextButton.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % images.length;
+                showImage(currentIndex);
+            });
+        }
+
+        showImage(currentIndex);
     }
-    #activity3-page .drawing-container {
-        height: 60vh;
+
+    // --- 5번 활동: 폭죽 효과 ---
+    const finishButton = document.getElementById('finish-button');
+    const fireworksContainer = document.getElementById('fireworks-container');
+
+    if (finishButton && fireworksContainer) {
+        finishButton.addEventListener('click', (e) => {
+            createFireworksAtRandomLocations(10); // 여러 위치에서 10번 폭죽 터뜨리기
+        });
     }
-    .note-textarea {
-        height: 25vh;
-        font-size: 1em;
+
+    function createFireworks(x, y) {
+        const colors = ['#FF0', '#F00', '#0F0', '#00F', '#F0F', '#0FF'];
+        const numParticles = 50;
+
+        for (let i = 0; i < numParticles; i++) {
+            const firework = document.createElement('div');
+            firework.classList.add('firework');
+            fireworksContainer.appendChild(firework);
+
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 200 + 100; // 거리 더 증가
+
+            const targetX = x + Math.cos(angle) * distance;
+            const targetY = y + Math.sin(angle) * distance;
+
+            firework.style.left = `${x}px`;
+            firework.style.top = `${y}px`;
+            firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+            firework.animate([
+                { transform: 'translate(-50%, -50%) scale(0)', opacity: 1 },
+                { transform: `translate(${targetX - x}px, ${targetY - y}px) scale(1.5)`, opacity: 0 }
+            ], {
+                duration: Math.random() * 1000 + 1000, // 1초에서 2초
+                easing: 'ease-out',
+                fill: 'forwards'
+            }).onfinish = () => {
+                firework.remove();
+            };
+        }
     }
-    .finish-button {
-        font-size: 1.5em;
-        padding: 10px 20px;
+
+    function createFireworksAtRandomLocations(count) {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        for (let i = 0; i < count; i++) {
+            // 화면 전체 범위에서 랜덤 위치
+            const randomX = Math.random() * vw;
+            const randomY = Math.random() * vh;
+            createFireworks(randomX, randomY);
+        }
     }
-    #activity3-page #color-picker {
-        width: 35px;
-        height: 35px;
-    }
-    #activity3-page #eraser-button,
-    #activity3-page #draw-mode-button,
-    #activity3-page #move-zoom-mode-button {
-        font-size: 1em;
-        padding: 8px 12px;
-    }
-}
+});
