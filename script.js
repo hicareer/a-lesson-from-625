@@ -249,6 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (ctx) {
                 ctx.lineWidth = isErasing ? 20 : 5;
                 ctx.lineCap = 'round';
+                ctx.lineJoin = 'round'; // 추가: lineJoin 설정
                 ctx.strokeStyle = isErasing ? '#222' : currentColor;
                 ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
             }
@@ -275,9 +276,12 @@ document.addEventListener('DOMContentLoaded', () => {
             moveZoomModeButton.classList.remove('active');
             if (ctx) { // 그리기 모드일 때 캔버스 상호작용 활성화
                 canvas.style.pointerEvents = 'auto';
+                // *** 수정된 부분: 모든 드로잉 속성을 명시적으로 재설정합니다. ***
                 ctx.lineWidth = isErasing ? 20 : 5; // 지우개 상태에 따라 두께 설정
+                ctx.lineCap = 'round'; // 선 끝 모양
+                ctx.lineJoin = 'round'; // 선 연결 모양
                 ctx.strokeStyle = isErasing ? '#222' : currentColor; // 지우개 상태에 따라 색상 설정
-                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over';
+                ctx.globalCompositeOperation = isErasing ? 'destination-out' : 'source-over'; // 합성 모드
             }
             drawingContainer.style.cursor = 'crosshair'; // 명시적으로 커서 설정
         } else { // 이동/확대 모드
@@ -304,6 +308,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     currentColor = colorPicker.value;
                     if (ctx) {
                         ctx.lineWidth = 5;
+                        ctx.lineCap = 'round'; // 초기화 시에도 설정
+                        ctx.lineJoin = 'round'; // 초기화 시에도 설정
                         ctx.strokeStyle = currentColor;
                         ctx.globalCompositeOperation = 'source-over';
                     }
