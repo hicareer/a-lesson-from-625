@@ -1,0 +1,469 @@
+@font-face {
+    font-family: 'SejongGeulggot';
+    src: url('SejongGeulggot.ttf') format('truetype'); /* 폰트 경로 수정 */
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    font-family: 'SejongGeulggot', sans-serif;
+    overflow: hidden; /* 페이지 전환 시 스크롤바 방지 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* 최소 높이를 뷰포트 높이로 설정 */
+    background-image: url('classbg.png'); /* 이미지 경로 수정 */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; /* 배경 고정 */
+    position: relative; /* 가상 요소를 위한 기준점 */
+}
+
+/* 배경 이미지 투명도 조절을 위한 오버레이 */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* 검정색 50% 투명도 (조절 가능) */
+    z-index: -1; /* 배경 이미지 뒤로 보냄 */
+}
+
+.page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white; /* 글씨 색상 */
+    text-align: center;
+    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+    padding: 20px;
+    position: absolute; /* 모든 페이지를 겹쳐놓고 JS로 제어 */
+    top: 0;
+    left: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+}
+
+.page.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 공통 스타일 */
+h1, h2, .main-title, .activity-title, .activity-box p, .quiz-intro-text {
+    font-weight: bold; /* 굵게 처리 */
+    color: #FFD700; /* 황금색으로 강조 (배경과 어울리게) */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* 그림자 효과 */
+}
+
+.main-title {
+    font-size: 5em; /* 수업 제목 크게 */
+    margin-bottom: 20px;
+}
+
+.teacher-name {
+    font-size: 1.8em;
+    margin-bottom: 50px;
+}
+
+.main-button {
+    background-color: #8B4513; /* SaddleBrown, 배경과 어울리는 갈색 계열 */
+    color: white;
+    padding: 15px 30px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.main-button:hover {
+    background-color: #A0522D; /* Sienna */
+}
+
+/* 목차 페이지 */
+.activity-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2열로 배치 */
+    gap: 30px; /* 박스 간 간격 */
+    max-width: 1200px; /* 최대 너비 설정 */
+    width: 90%;
+}
+
+.activity-box {
+    background-color: rgba(139, 69, 19, 0.8); /* SaddleBrown 계열, 투명도 */
+    border: 2px solid #FFD700; /* 황금색 테두리 */
+    border-radius: 15px;
+    padding: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative; /* 아이콘 위치를 위한 기준점 */
+}
+
+.activity-box:hover {
+    transform: translateY(-10px);
+    background-color: rgba(160, 82, 45, 0.9); /* Sienna 계열 */
+}
+
+.activity-box p {
+    font-size: 2em;
+    margin: 0;
+    color: white;
+}
+
+.next-icon {
+    font-size: 2.5em;
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    transition: transform 0.3s ease;
+}
+
+.activity-box:hover .next-icon {
+    transform: translateX(5px);
+}
+
+/* 활동 페이지 공통 제목 */
+.activity-title {
+    font-size: 3em;
+    margin-bottom: 40px;
+}
+
+/* 슬라이더 공통 스타일 */
+.slider-container {
+    position: relative;
+    width: 80%; /* 슬라이더 너비 */
+    max-width: 1000px;
+    height: 60vh; /* 슬라이더 높이 */
+    overflow: hidden;
+    border: 5px solid #FFD700;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5); /* 이미지 로딩 전 배경 */
+    display: flex; /* 이미지 중앙 정렬을 위해 */
+    justify-content: center;
+    align-items: center;
+}
+
+.slider-images {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+    position: relative;
+}
+
+.slider-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지가 잘리지 않고 컨테이너에 맞게 */
+    flex-shrink: 0; /* 이미지가 줄어들지 않도록 */
+    display: none; /* 기본적으로 숨김 */
+}
+
+.slider-image.active {
+    display: block; /* 활성화된 이미지만 보임 */
+}
+
+.slider-prev, .slider-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 2em;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    z-index: 10; /* 이미지 위에 오도록 */
+}
+
+.slider-prev:hover, .slider-next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.slider-prev {
+    left: 10px;
+}
+
+.slider-next {
+    right: 10px;
+}
+
+/* 다음 활동으로 넘어가는 공통 버튼 */
+.nav-button {
+    background-color: #8B4513;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1.5em;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 30px;
+    box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.nav-button:hover {
+    background-color: #A0522D;
+}
+
+.nav-button:disabled {
+    background-color: #555;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* 2번 활동 페이지 (소개) */
+.activity2-content {
+    display: flex;
+    width: 80%;
+    max-width: 1200px;
+    gap: 30px;
+    align-items: center;
+    justify-content: center;
+}
+
+.activity2-image-container {
+    flex: 1; /* 왼쪽 절반 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.responsive-image {
+    max-width: 100%;
+    max-height: 70vh; /* 화면 높이에 맞춰 조정 */
+    height: auto;
+    display: block; /* 이미지 하단 여백 제거 */
+    border-radius: 10px;
+}
+
+.activity2-text-container {
+    flex: 1; /* 오른쪽 절반 */
+    background-color: rgba(139, 69, 19, 0.8);
+    border: 2px solid #FFD700;
+    border-radius: 15px;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* 이미지 컨테이너와 높이 맞춤 */
+    min-height: 300px; /* 최소 높이 설정 */
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.quiz-intro-text {
+    font-size: 2.5em;
+    color: white;
+    margin: 0;
+}
+
+/* 2번 활동 페이지 (국가 퀴즈) */
+.quiz-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 90%;
+    max-width: 1200px;
+    background-color: rgba(0, 0, 0, 0.6);
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.flags-container, .names-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* 유동적인 그리드 */
+    gap: 15px;
+    justify-items: center;
+    align-items: center;
+    padding: 10px;
+    border: 2px dashed #FFD700;
+    border-radius: 10px;
+    min-height: 150px;
+}
+
+.flag-item {
+    width: 80px;
+    height: 50px;
+    object-fit: contain;
+    cursor: grab;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 5px;
+    transition: transform 0.1s ease;
+}
+
+.flag-item.dragging {
+    opacity: 0.7;
+    transform: scale(1.1);
+}
+
+.name-box {
+    width: 100px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 2px solid #FFD700;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    position: relative;
+}
+
+.name-box.correct {
+    background-color: rgba(60, 179, 113, 0.7); /* MediumSeaGreen */
+    border-color: #3CB371;
+}
+
+.name-box.occupied {
+    background-color: rgba(255, 99, 71, 0.7); /* Tomato */
+    border-color: #FF6347;
+}
+
+.name-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* 텍스트 클릭 방지 */
+}
+
+/* 3번 활동 페이지 (지도 칠하기) */
+.drawing-container {
+    position: relative;
+    width: 90%;
+    max-width: 1200px;
+    height: 70vh; /* 높이 조정 */
+    border: 5px solid #FFD700;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.drawing-background {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* 이미지가 잘리지 않고 컨테이너에 맞게 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#drawing-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2; /* 이미지 위에 캔버스 */
+    background-color: transparent; /* 캔버스 배경 투명 */
+}
+
+/* 4번 활동 페이지 (사진과 필기) */
+.note-textarea {
+    width: 80%;
+    max-width: 1000px;
+    height: 100px;
+    margin-top: 20px;
+    padding: 15px;
+    font-family: 'SejongGeulggot', sans-serif;
+    font-size: 1.2em;
+    border: 2px solid #FFD700;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    resize: vertical; /* 세로 크기 조절 가능 */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.finish-button {
+    font-size: 2em; /* 🎉 아이콘 크게 */
+    padding: 10px 25px;
+}
+
+/* 폭죽 효과 (JS로 추가될 요소) */
+.firework {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ff0; /* 초기 색상 */
+    border-radius: 50%;
+    opacity: 0;
+    animation: firework-explode 1s forwards;
+    pointer-events: none; /* 클릭 방지 */
+    z-index: 9999; /* 최상단에 표시 */
+}
+
+@keyframes firework-explode {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* 미디어 쿼리 (PC 사용 기본이지만, 혹시 모를 작은 화면 대비) */
+@media (max-width: 768px) {
+    .main-title {
+        font-size: 3em;
+    }
+    .activity-grid {
+        grid-template-columns: 1fr; /* 작은 화면에서는 1열로 */
+    }
+    .activity-box p {
+        font-size: 1.5em;
+    }
+    .activity-title {
+        font-size: 2em;
+    }
+    .slider-container {
+        height: 50vh;
+    }
+    .activity2-content {
+        flex-direction: column;
+    }
+    .quiz-intro-text {
+        font-size: 1.8em;
+    }
+    .flags-container, .names-container {
+        grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    }
+    .flag-item {
+        width: 60px;
+        height: 40px;
+    }
+    .name-box {
+        width: 80px;
+        height: 35px;
+        font-size: 1em;
+    }
+}
